@@ -2,47 +2,57 @@
 import Card from '../../components/Card.astro';
 import Base from '../../layouts/Base.astro';
 import { allMaisons } from '../../../backend.mjs';
-const offres = await allMaisons();
+//const offres = await allMaisons();
+
+let message = '';
+let offres = [];
+if (Astro.request.method === "POST") {
+    const data = await Astro.request.formData();
+    const minPrix = parseInt(data.get("minPrix"));
+    const maxPrix = parseInt(data.get("maxPrix"));
+
+    if (minPrix > 0 && maxPrix > 0 && maxPrix > minPrix) {
+        offres = await filterByPrix(minPrix, maxPrix);
+		if(offres.length === 0) {
+			message = `Pas d'offres entre ${minPrix}€ et ${maxPrix}€`;
+		} else {
+        	message = `Liste des offres entre ${minPrix}€ et ${maxPrix}€`
+		}
+    } else {
+        message = "Veuillez entrer des valeurs valides pour le prix.";
+        offres = await allMaisons();
+    }
+} else {
+    offres = await allMaisons();
+}
 ---
 
 <Base titre="Offres">
-    <h1 class="text-4xl font-bold text-center text-green-600 p-4">Liste des Offres</h1>
+    <h1 class="text-4xl font-bold text-center text-green-600 p-6 mb-6 border-b-4 border-green-600">Liste des Offres</h1>
 
-    <div x-data="{ showFavorites: false, viewMode: 'grid' }" class="p-4">
-        <div class="flex justify-center space-x-4 mb-4">
-            <button 
-                @click="showFavorites = !showFavorites" 
-                class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700"
-            >
-                <span x-show="!showFavorites">Afficher les favoris</span>
-                <span x-show="showFavorites">Afficher tout</span>
-            </button>
-
-            <button 
-                @click="viewMode = 'grid'" 
-                class="bg-gray-600 text-white px-4 py-2 rounded shadow hover:bg-gray-700"
-            >
-                Grille
-            </button>
+    <div x-data="{ showFavorites: false, viewMode: 'grid' }" class="p-6 bg-green-50 rounded-lg shadow-md">
+        <div class="flex justify-center space-x-6 mb-6">
             
-            <button 
-                @click="viewMode = 'list'" 
-                class="bg-gray-600 text-white px-4 py-2 rounded shadow hover:bg-gray-700"
-            >
-                Liste
-            </button>
+
+            <form action="/offres" method="POST" class="flex space-x-4">
+                <input type="number" name="minPrix" placeholder="Prix minimum" class="px-4 py-2 border-2 border-green-600 rounded-lg focus:outline-none focus:border-green-700" />
+                <input type="number" name="maxPrix" placeholder="Prix maximum" class="px-4 py-2 border-2 border-green-600 rounded-lg focus:outline-none focus:border-green-700" />
+                <input type="submit" value="Filtrer par prix" class="bg-green-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-green-700 transition duration-300" />
+            </form>
+            
         </div>
 
-        <div x-show="!showFavorites" :class="viewMode === 'grid' ? 'flex flex-wrap justify-center mt-4' : 'space-y-4'">
+        <div x-show="!showFavorites" :class="viewMode === 'grid' ? 'flex flex-wrap justify-center mt-6' : 'space-y-6'">
             {offres.map((offre) => (
-                <Card {...offre} nomMaison={offre.nomMaison} imgUrl={offre.imgUrl} :class="viewMode === 'grid' ? 'w-1/4 p-2' : 'w-full'" />
+                <Card {...offre} nomMaison={offre.nomMaison} imgUrl={offre.imgUrl} :class="viewMode === 'grid' ? 'w-1/4 p-4' : 'w-full'"/>
             ))}
         </div>
 
-        <div x-show="showFavorites" :class="viewMode === 'grid' ? 'flex flex-wrap justify-center mt-4' : 'space-y-4'">
+        <div x-show="showFavorites" :class="viewMode === 'grid' ? 'flex flex-wrap justify-center mt-6' : 'space-y-6'">
             {offres.map((offre) => offre.favori && (
-                <Card {...offre} nomMaison={offre.nomMaison} imgUrl={offre.imgUrl} :class="viewMode === 'grid' ? 'w-1/4 p-2' : 'w-full'" />
+                <Card {...offre} nomMaison={offre.nomMaison} imgUrl={offre.imgUrl} :class="viewMode === 'grid' ? 'w-1/4 p-4' : 'w-full'"/>
             ))}
         </div>
     </div>
 </Base> 
+ 

@@ -23,18 +23,53 @@ if (Astro.request.method === "POST") {
 
 
 <Base>
-<h1 class="text-lg">Ajouter une offre</h1>
+    <h1 class="text-2xl font-bold text-center my-6 text-green-700">Ajouter une offre</h1>
 
-{message && <p class="text-red-500">{message}</p>}
+<div class="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6">
+    {message && <p class="text-center text-red-500 mb-4">{message}</p>}
 
-<form action="/offres/add" method="POST" enctype="multipart/form-data">
-    <input type="text" name="nomMaison" placeholder="Nom de la maison" required class="w-full mt-2 p-2 border border-gray-300 rounded-md" />
-    <input type="number" name="prix" placeholder="Prix" class="w-full mt-2 p-2 border border-gray-300 rounded-md"/>
-    <input type="number" name="nbSdb" placeholder="Nombre de salles de bain" class="w-full mt-2 p-2 border border-gray-300 rounded-md" />
-    <input type="number" name="nbChambres" placeholder="Nombre de chambres" class="w-full mt-2 p-2 border border-gray-300 rounded-md" />
-    <input type="number" name="surface" placeholder="Superficie" class="w-full mt-2 p-2 border border-gray-300 rounded-md" />
-    <input type="file" name="image" class="w-full mt-2 p-2 border border-gray-300 rounded-md"/>
+    <form action="/offres/add" method="POST" enctype="multipart/form-data" class="space-y-4">
+        <div>
+            <label for="nomMaison" class="block font-medium text-gray-700">Nom de la maison</label>
+            <input type="text" name="nomMaison" id="nomMaison" placeholder="Nom de la maison" required 
+                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        </div>
 
-    <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md">Ajouter</button>
-</form>
+        <div>
+            <label for="prix" class="block font-medium text-gray-700">Prix (€)</label>
+            <input type="number" name="prix" id="prix" placeholder="Prix" 
+                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        </div>
+
+        <div>
+            <label for="nbSdb" class="block font-medium text-gray-700">Nombre de salles de bain</label>
+            <input type="number" name="nbSdb" id="nbSdb" placeholder="Nombre de salles de bain" 
+                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        </div>
+
+        <div>
+            <label for="nbChambres" class="block font-medium text-gray-700">Nombre de chambres</label>
+            <input type="number" name="nbChambres" id="nbChambres" placeholder="Nombre de chambres" 
+                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        </div>
+
+        <div>
+            <label for="surface" class="block font-medium text-gray-700">Superficie (m²)</label>
+            <input type="number" name="surface" id="surface" placeholder="Superficie" 
+                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        </div>
+
+        <div>
+            <label for="image" class="block font-medium text-gray-700">Ajouter une image</label>
+            <input type="file" name="image" id="image" 
+                   class="w-full p-2 border border-gray-300 rounded-md bg-gray-50 file:bg-green-500 file:text-white file:px-3 file:py-2 file:rounded-md file:border-0 hover:file:bg-green-600" />
+        </div>
+
+        <button type="submit" 
+                class="w-full bg-green-600 text-white py-2 rounded-md text-lg font-medium hover:bg-green-700 transition">
+            Ajouter
+        </button>
+    </form>
+</div>
+
 </Base>

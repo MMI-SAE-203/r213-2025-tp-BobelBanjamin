@@ -8,7 +8,7 @@ export async function allMaisons() {
     });
 
     maisons = maisons.map((maison) => {
-        maison.imgUrl = pb.files.getURL(maison, maison.images); 
+        maison.imgUrl = pb.files.getURL(maison, maison.Images); 
         return maison;
     });
 
@@ -31,7 +31,7 @@ export async function allMaisonsFavoris() {
 export async function getOffre(id) {
 
         let data = await pb.collection('maisons').getOne(id);
-        data.imageUrl = pb.files.getURL(data, data.images);
+        data.imageUrl = pb.files.getURL(data, data.Images);
         return data;
    
 }
@@ -52,7 +52,7 @@ export async function getOffre(id) {
         }
         
         export async function bySurface(s) {
-        const Surface = await pb.collection('maisons').getFullList({ filter: `surface > ${s}`,}
+        let Surface = await pb.collection('maisons').getFullList({ filter: `surface > ${s}`,}
             ) ;
         return Surface ;
         }
@@ -115,3 +115,20 @@ export async function getOffre(id) {
             }
         }
         
+
+        export async function filterByPrix(prixMin, prixMax) {
+            try {
+                let data = await pb.collection('maison').getFullList({
+                    sort: '-created',
+                    filter: `prix >= ${prixMin} && prix <= ${prixMax}`
+                });
+                data = data.map((maison) => {
+                    maison.imageUrl = pb.files.getURL(maison, maison.image);
+                    return maison;
+                });
+                return data;
+            } catch (error) {
+                console.log('Une erreur est survenue en filtrant la liste des maisons', error);
+                return [];
+            }
+        }
