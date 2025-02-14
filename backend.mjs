@@ -21,7 +21,7 @@ export async function allMaisonsFavoris() {
     } );
 
     Favoris = Favoris.map((maison) => {
-        maison.imgUrl = pb.files.getURL(maison, maison.images); 
+        maison.imgUrl = pb.files.getURL(maison, maison.Images); 
         return maison;
     });
 
@@ -58,7 +58,7 @@ export async function getOffre(id) {
         }
         
         export async function surfaceORprice(s,p) {
-        const SurfaceORPrix = await pb.collection('maisons').getFullList({ filter: `surface > ${s}&& prix < ${p}` }
+        const SurfaceORPrix = await pb.collection('maisons').getFullList({ filter: `surface > ${s} && prix < ${p}` }
             ) ;
         return SurfaceORPrix ;
         }
@@ -68,7 +68,50 @@ export async function getOffre(id) {
                     filter: `prix < ${prix}`
                 });
                 data.forEach(maison => {
-                    maison.imageUrl = pb.files.getURL(maison, maison.image);
+                    maison.imageUrl = pb.files.getURL(maison, maison.Image);
                 });
                 return data;
         }
+
+
+        export async function getStaticPaths() {
+            // Récupérer toutes les maisons depuis PocketBase
+            const maisons = await pb.collection('maisons').getFullList();
+        
+            // Créer des chemins dynamiques
+            return maisons.map((maison) => ({
+                params: { id: maison.id.toString() },
+                props: { maison },
+            }));
+        }
+
+        export async function addOffre(house) {
+            try {
+                // Vérifier si une image a été envoyée
+                let formData = new FormData();
+                formData.append("nomMaison", house.nomMaison);
+                formData.append("prix", house.prix);
+                formData.append("nbSdb", house.nbSdb);
+                formData.append("nbChambres", house.nbChambres);
+                formData.append("surface", house.surface);
+        
+                if (house.image) {
+                    formData.append("images", house.image); // "images" correspond au champ dans ta base de données
+                }
+        
+                // Ajouter l'offre à la collection "maisons"
+                await pb.collection("maisons").create(formData);
+        
+                return {
+                    success: true,
+                    message: "Offre ajoutée avec succès !"
+                };
+            } catch (error) {
+                console.error("Une erreur est survenue en ajoutant la maison", error);
+                return {
+                    success: false,
+                    message: "Une erreur est survenue en ajoutant la maison."
+                };
+            }
+        }
+        

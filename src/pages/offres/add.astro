@@ -1,0 +1,23 @@
+---
+import { addOffre } from "../../../backend.mjs";
+
+let message = "";
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    
+    const house = {
+        nomMaison: formData.get("nomMaison"),
+        prix: parseFloat(formData.get("prix")) || 0,
+        nbSdb: parseInt(formData.get("nbSdb")) || 0,
+        nbChambres: parseInt(formData.get("nbChambres")) || 0,
+        surface: parseFloat(formData.get("surface")) || 0,
+        image: formData.get("image")
+    };
+
+    // Appel de la fonction addOffre
+    const response = await addOffre(house);
+    message = response.message;
+}
+---
+
