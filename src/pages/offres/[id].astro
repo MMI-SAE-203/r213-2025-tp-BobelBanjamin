@@ -1,0 +1,35 @@
+---
+import { getOffre } from '../../../backend.mjs';
+import Base from '../../layouts/Base.astro';
+
+const { id } = Astro.params;
+const offre = await getOffre(id);
+
+if (!offre) {
+   return Astro.redirect('/offres');
+}
+---
+
+<Base titre={offre.nomMaison}>
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 p-4">
+        <img 
+            src={offre.imageUrl} 
+            alt={`Image de ${offre.nomMaison}`} 
+            class="w-full h-64 object-cover rounded-lg mb-4"
+        />
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">{offre.nomMaison}</h2>
+        <ul class="text-gray-700 space-y-2">
+            <li><strong>📍 Adresse :</strong> {offre.adresse}</li>
+            <li><strong>📏 Surface :</strong> {offre.surface} m²</li>
+            <li><strong>💰 Prix :</strong> {offre.prix} €</li>
+            <li><strong>🛏️ Chambres :</strong> {offre.nbChambres}</li>
+            <li><strong>🛁 Salles de bain :</strong> {offre.nbSdb}</li>
+        </ul>
+
+        <div class="mt-6">
+            <a href="/offres" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+                ⬅ Retour aux offres
+            </a>
+        </div>
+    </div>
+</Base>

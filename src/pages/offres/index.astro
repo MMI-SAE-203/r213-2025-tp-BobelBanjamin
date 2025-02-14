@@ -1,0 +1,48 @@
+---
+import Card from '../../components/Card.astro';
+import Base from '../../layouts/Base.astro';
+import { allMaisons } from '../../../backend.mjs';
+const offres = await allMaisons();
+---
+
+<Base titre="Offres">
+    <h1 class="text-4xl font-bold text-center text-blue-600 p-4">Liste des Offres</h1>
+
+    <div x-data="{ showFavorites: false, viewMode: 'grid' }" class="p-4">
+        <div class="flex justify-center space-x-4 mb-4">
+            <button 
+                @click="showFavorites = !showFavorites" 
+                class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+            >
+                <span x-show="!showFavorites">Afficher les favoris</span>
+                <span x-show="showFavorites">Afficher tout</span>
+            </button>
+
+            <button 
+                @click="viewMode = 'grid'" 
+                class="bg-gray-600 text-white px-4 py-2 rounded shadow hover:bg-gray-700"
+            >
+                Grille
+            </button>
+            
+            <button 
+                @click="viewMode = 'list'" 
+                class="bg-gray-600 text-white px-4 py-2 rounded shadow hover:bg-gray-700"
+            >
+                Liste
+            </button>
+        </div>
+
+        <div x-show="!showFavorites" :class="viewMode === 'grid' ? 'flex flex-wrap justify-center mt-4' : 'space-y-4'">
+            {offres.map((offre) => (
+                <Card {...offre} nomMaison={offre.nomMaison} imgUrl={offre.imgUrl} :class="viewMode === 'grid' ? 'w-1/4 p-2' : 'w-full'" />
+            ))}
+        </div>
+
+        <div x-show="showFavorites" :class="viewMode === 'grid' ? 'flex flex-wrap justify-center mt-4' : 'space-y-4'">
+            {offres.map((offre) => offre.favori && (
+                <Card {...offre} nomMaison={offre.nomMaison} imgUrl={offre.imgUrl} :class="viewMode === 'grid' ? 'w-1/4 p-2' : 'w-full'" />
+            ))}
+        </div>
+    </div>
+</Base> 

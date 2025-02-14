@@ -1,0 +1,29 @@
+---
+import { byPrix } from '../../../../backend.mjs';
+import Base from '../../../layouts/Base.astro';
+
+const { prix } = Astro.params;
+const offres = await byPrix(prix);
+
+if (!offres.length) {
+   return Astro.redirect('/offres');
+}
+---
+
+<Base titre={`Maisons à moins de ${prix}€`}>
+    <h2 class="text-2xl font-bold text-gray-900 my-4">Maisons à moins de {prix} €</h2>
+    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {offres.map(offre => (
+            <li class="border rounded-lg shadow-md p-4 bg-white">
+                <h3 class="text-xl font-semibold">{offre.nomMaison}</h3>
+                <p>Adresse: {offre.adresse}</p>
+                <p>Surface: {offre.surface} m²</p>
+                <p class="font-bold">Prix: {offre.prix} €</p>
+                <a href={`/offres/${offre.id}`} 
+                   class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition">
+                    🔍 Voir plus
+                </a>
+            </li>
+        ))}
+    </ul>
+</Base>

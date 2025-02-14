@@ -1,0 +1,41 @@
+---
+import { bySurface } from '../../../../backend.mjs';
+import Base from '../../../layouts/Base.astro';
+
+const { surface } = Astro.params;
+const offres = await bySurface(surface);
+
+if (!offres.length) {
+   return Astro.redirect('/offres');
+}
+---
+
+<Base titre={`Maisons de plus de ${surface} m²`}>
+    <div class="max-w-6xl mx-auto p-6">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">
+            🏡 Maisons ayant une surface supérieure à {surface} m²
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {offres.map(offre => (
+                <div class="bg-white shadow-lg rounded-lg p-4">
+                    <img 
+            src={offre.imageUrl} 
+            alt={`Image de ${offre.nomMaison}`} 
+            class="w-full h-64 object-cover rounded-lg mb-4"
+        />
+
+                    <h3 class="text-xl font-semibold text-gray-800">{offre.nomMaison}</h3>
+                    <p class="text-gray-600">📍 {offre.adresse}</p>
+                    <p class="text-gray-700 font-semibold">📏 {offre.surface} m²</p>
+                    <p class="text-green-600 font-bold">💰 {offre.prix} €</p>
+
+                    <a href={`/offres/${offre.id}`} 
+                       class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+                        🔍 Voir plus
+                    </a>
+                </div>
+            ))}
+        </div>
+    </div>
+</Base>
