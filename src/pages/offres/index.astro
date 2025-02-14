@@ -2,14 +2,15 @@
 import Card from '../../components/Card.astro';
 import Base from '../../layouts/Base.astro';
 import { allMaisons } from '../../../backend.mjs';
+import { filterByPrix } from '../../../backend.mjs';
 //const offres = await allMaisons();
 
 let message = '';
 let offres = [];
 if (Astro.request.method === "POST") {
     const data = await Astro.request.formData();
-    const minPrix = parseInt(data.get("minPrix"));
-    const maxPrix = parseInt(data.get("maxPrix"));
+    const minPrix = parseInt(data.get("minPrix") as string);
+    const maxPrix = parseInt(data.get("maxPrix") as string);
 
     if (minPrix > 0 && maxPrix > 0 && maxPrix > minPrix) {
         offres = await filterByPrix(minPrix, maxPrix);
@@ -29,6 +30,8 @@ if (Astro.request.method === "POST") {
 
 <Base titre="Offres">
     <h1 class="text-4xl font-bold text-center text-green-600 p-6 mb-6 border-b-4 border-green-600">Liste des Offres</h1>
+
+    {message && <p class="text-center text-red-500 mb-4">{message}</p>}
 
     <div x-data="{ showFavorites: false, viewMode: 'grid' }" class="p-6 bg-green-50 rounded-lg shadow-md">
         <div class="flex justify-center space-x-6 mb-6">

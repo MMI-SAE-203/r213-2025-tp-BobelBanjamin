@@ -118,7 +118,7 @@ export async function getOffre(id) {
 
         export async function filterByPrix(prixMin, prixMax) {
             try {
-                let data = await pb.collection('maison').getFullList({
+                let data = await pb.collection('maisons').getFullList({
                     sort: '-created',
                     filter: `prix >= ${prixMin} && prix <= ${prixMax}`
                 });
