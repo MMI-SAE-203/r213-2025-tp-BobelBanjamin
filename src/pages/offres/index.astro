@@ -6,13 +6,13 @@ const offres = await allMaisons();
 ---
 
 <Base titre="Offres">
-    <h1 class="text-4xl font-bold text-center text-blue-600 p-4">Liste des Offres</h1>
+    <h1 class="text-4xl font-bold text-center text-green-600 p-4">Liste des Offres</h1>
 
     <div x-data="{ showFavorites: false, viewMode: 'grid' }" class="p-4">
         <div class="flex justify-center space-x-4 mb-4">
             <button 
                 @click="showFavorites = !showFavorites" 
-                class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+                class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700"
             >
                 <span x-show="!showFavorites">Afficher les favoris</span>
                 <span x-show="showFavorites">Afficher tout</span>
