@@ -65,7 +65,7 @@ export async function getOffre(id) {
         
         export async function byPrix(prix) {
                 let data = await pb.collection('maisons').getFullList({
-                    filter: `prix < ${prix}`
+                    filter: `prix < 300000`
                 });
                 data.forEach(maison => {
                     maison.imageUrl = pb.files.getURL(maison, maison.Image);
